@@ -1478,7 +1478,19 @@ static NSString *ModelDescription(NSObject *model) {
     if (!dic || dic == (id)kCFNull) return NO;
     if (![dic isKindOfClass:[NSDictionary class]]) return NO;
     
-    NSLog(@"testDemo");
+     NSMutableDictionary * mDictiony = [NSMutableDictionary dictionary];
+    [dic enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        if([obj isKindOfClass:[NSNumber class]]){
+            NSNumber * num = (NSNumber *)obj;
+            NSString *doubleString  = [NSString stringWithFormat:@"%lf", num.doubleValue];
+            NSDecimalNumber *decNumber  = [NSDecimalNumber decimalNumberWithString:doubleString];
+            NSString * str = [decNumber stringValue];
+            [mDictiony setValue:str forKey:key];
+        }else{
+            [mDictiony setValue:obj forKey:key];
+        }
+    }];
+    dic = mDictiony;
 
     _YYModelMeta *modelMeta = [_YYModelMeta metaWithClass:object_getClass(self)];
     if (modelMeta->_keyMappedCount == 0) return NO;
